@@ -59,22 +59,50 @@ setTimeout(function() {
             stroke: {
                 curve: 'smooth'
             },
-            colors: ["#FFB64D", "#FF5370"],
+            colors: ["#FFB64D", "#FF5370", "#707B7C", "#E74C3C", "#DC7633", "#5D6D7E", "#28B463", "#A569BD", "#0B5345",
+            "#F4D03F", "#FA8072"],
             series: [{
-                name: 'series1',
+                name: 'BLOCK JOINING MOTAR',
                 data: [31, 40, 28, 51, 42, 109, 100]
             }, {
-                name: 'series2',
-                data: [11, 32, 45, 32, 34, 52, 41]
+                name: 'BROMEL FIX TYPE-3',
+                data: [11, 32, 45, 34, 52, 41]
+            },  {
+                name: 'BROMEL FIX TYPE–1',
+                data: [11, 32, 32, 34, 52, 41]
+            },  {
+                name: 'BROMEL FIX TYPE–2',
+                data: [11, 45, 32, 34, 52, 41]
+            },  {
+                name: 'EPOXY REGULAR(1 KG)',
+                data: [32, 45, 32, 34, 52, 41]
+            },  {
+                name: 'EPOXY REGULAR(5 KG)',
+                data: [11, 55, 45, 32, 34, 52, 41]
+            },  {
+                name: 'SPARKAL COPPER',
+                data: [11, 32, 45, 32, 34, 12, 41]
+            },  {
+                name: 'SPARKAL GOLDEN',
+                data: [11, 32, 45, 32, 40, 52, 41]
+            },  {
+                name: 'SPARKAL SILVER',
+                data: [11, 32, 22, 32, 34, 52, 41]
+            },  {
+                name: 'WHITE SBR(1 LTR)',
+                data: [11, 37, 45, 32, 34, 52, 41]
+            },  {
+                name: 'WHITE SBR(5 LTR)',
+                data: [10, 32, 45, 32, 34, 52, 41]
             }],
 
             xaxis: {
                 type: 'datetime',
-                categories: ["2018-09-19T00:00:00", "2018-09-19T01:30:00", "2018-09-19T02:30:00", "2018-09-19T03:30:00", "2018-09-19T04:30:00", "2018-09-19T05:30:00", "2018-09-19T06:30:00"],
+                categories: [],
             },
             tooltip: {
                 x: {
-                    format: 'dd/MM/yy HH:mm'
+                    format: 'MM-yyyy'
                 },
             }
         }
