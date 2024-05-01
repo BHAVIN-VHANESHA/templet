@@ -16,12 +16,12 @@
                     <div class="row align-items-center">
                         <div class="col-md-12">
                             <div class="page-header-title">
-                                <h5 class="m-b-10">Radial Chart</h5>
+                                <h5 class="m-b-10">Various Analysis</h5>
                             </div>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="/"><i class="feather icon-home"></i></a></li>
-                                <li class="breadcrumb-item"><a href="#">Chart</a></li>
-                                <li class="breadcrumb-item"><a href="#">Radial Chart</a></li>
+<!--                                <li class="breadcrumb-item"><a href="#">Chart</a></li>-->
+<!--                                <li class="breadcrumb-item"><a href="#">Radial Chart</a></li>-->
                             </ul>
                         </div>
                     </div>
@@ -61,13 +61,38 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+<!--                <div class="col-md-6" style="height: 636.5x; width: 1920px;">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-header">-->
+<!--                            <h5>Sales Trends Over Time</h5>-->
+<!--                        </div>-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="sales-trend"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+                <div class="col-md-6" style="height: 485px; width: 1920px;">
                     <div class="card">
                         <div class="card-header">
-                            <h5>Customers Loyalty</h5>
+                            <h5>Monthly Sales Growth</h5>
+<!--                            <label for="productSelect">Select a Product:</label>-->
+<!--        <select id="productSelect" onchange="updateChart()">-->
+<!--            <option value="" disabled selected>Select Product</option>-->
+            <!-- Add options dynamically using JavaScript -->
+<!--        </select>-->
                         </div>
                         <div class="card-body">
-                            <div id="customer-loyalty"></div>
+                            <div id="monthly-sales"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" style="height: 485px; width: 1920px;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5>Customers Loyalty Metrics</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="bar-chart"></div>
                         </div>
                     </div>
                 </div>
@@ -81,16 +106,76 @@
 <!--                        </div>-->
 <!--                    </div>-->
 <!--                </div>-->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5>Pie Chart donut</h5>
-                        </div>
-                        <div class="card-body">
-                            <div id="pie-chart-2" style="width:100%"></div>
-                        </div>
-                    </div>
-                </div>
+<!--                <div class="col-md-6" style="height: 485px; width: 1920px;">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-header">-->
+<!--                            <h5>Customers Loyalty</h5>-->
+<!--                        </div>-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="heatmap-chart" style="width:100%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-6" style="height: 485px; width: 1920px;">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-header">-->
+<!--                            <h5>Customers Loyalty</h5>-->
+<!--                        </div>-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="scatter-chart" style="width:100%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-6" style="height: 485px; width: 1920px;">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-header">-->
+<!--                            <h5>Customers Loyalty</h5>-->
+<!--                        </div>-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="line-chart" style="width:100%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-6" style="height: 485px; width: 1920px;">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-header">-->
+<!--                            <h5>Customers Loyalty</h5>-->
+<!--                        </div>-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="histogram-chart" style="width:100%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-6" style="height: 622px; width: 1920px;">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-header">-->
+<!--                            <h5>Customers Loyalty</h5>-->
+<!--                        </div>-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="donut-chart" style="width:100%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-6">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-header">-->
+<!--                            <h5>Customers Loyalty</h5>-->
+<!--                        </div>-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="price-sensitivity" style="width:100%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="col-md-6">-->
+<!--                    <div class="card">-->
+<!--                        <div class="card-header">-->
+<!--                            <h5>Customers Loyalty</h5>-->
+<!--                        </div>-->
+<!--                        <div class="card-body">-->
+<!--                            <div id="customer-behaviour" style="width:100%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <!-- [ variant-chart ] end -->
             </div>
             <!-- [ Main Content ] end -->
@@ -107,10 +192,10 @@
 <!--    <script src="/static/assets/js/pages/chart-apex.js"></script>-->
 
 
+<!--Total Quantity Sold by Product-->
 <script>
     const dict = {{data | safe}}
 
-    // Total Quantity Sold by Product
     var options = {
           series: [{
           data: dict.total_qty
@@ -184,8 +269,12 @@
 
         var chart = new ApexCharts(document.querySelector("#total-product-qty"), options);
         chart.render();
+</script>
 
-    // Total Revenue Generated by Product
+
+<!--Total Revenue Generated by Product-->
+<script>
+<!--    const dict = {{data | safe}}-->
     var options = {
           series: [{
           data: dict.total_revenue
@@ -234,7 +323,7 @@
           }
         },
         title: {
-            text: 'Total Revenue Generated By Each Product (in-₹)',
+            text: 'Total Revenue Generated By Each Product (in ₹)',
             align: 'center',
             floating: true
         },
@@ -259,71 +348,653 @@
 
         var chart = new ApexCharts(document.querySelector("#total-product-revenue"), options);
         chart.render();
+</script>
 
-    // customer loyalty
-     var options = {
-          series: [{
-          name: 'XYZ MOTORS',
-          data: dict.date
-        }],
-          chart: {
-          type: 'area',
-          stacked: false,
-          height: 350,
-          zoom: {
-            type: 'x',
-            enabled: true,
-            autoScaleYaxis: true
-          },
-          toolbar: {
-            autoSelected: 'zoom'
-          }
+
+bar-chart
+<script>
+<!--    const dict = {{data | safe}}-->
+    var options = {
+    series: [{
+            name: 'Avg. Time Between Purchases',
+            data: dict.average_time
         },
-        dataLabels: {
-          enabled: false
+        {
+            name: 'Purchase Frequency',
+            data: dict.purchase_frequency
         },
-        markers: {
-          size: 0,
+        {
+            name: 'Recency',
+            data: dict.recency
         },
-        title: {
-          text: 'Stock Price Movement',
-          align: 'left'
+        {
+            name: 'Total Spending',
+            data: dict.total_spending
         },
-        fill: {
-          type: 'gradient',
-          gradient: {
-            shadeIntensity: 1,
-            inverseColors: false,
-            opacityFrom: 0.5,
-            opacityTo: 0,
-            stops: [0, 90, 100]
-          },
-        },
-        yaxis: {
-          labels: {
-            formatter: function (val) {
-              return (val / 1000000).toFixed(0);
-            },
-          },
-          title: {
-            text: 'Price'
-          },
-        },
-        xaxis: {
-          type: 'datetime',
-        },
-        tooltip: {
-          shared: false,
-          y: {
-            formatter: function (val) {
-              return (val / 1000000).toFixed(0)
-            }
-          }
+        {
+            name: 'Basket Size',
+            data: dict.basket_size
         }
+    ],
+    chart: {
+        type: 'bar',
+        height: 380,
+<!--        width: auto,-->
+    },
+    plotOptions: {
+        bar: {
+            horizontal: false,
+            columnWidth: '55%',
+            endingShape: 'rounded'
+        },
+    },
+    dataLabels: {
+        enabled: false
+    },
+    stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent']
+    },
+    xaxis: {
+        categories: dict.customers,
+    },
+    yaxis: {
+        title: {
+            text: 'Value'
+        }
+    },
+    fill: {
+        opacity: 1
+    },
+    title: {
+    text: 'Bar Graph of Customer Loyalty Metrics'
+  },
+    tooltip: {
+        y: {
+            formatter: function(val, { series, seriesIndex, dataPointIndex, w }) {
+                var seriesName = w.globals.seriesNames[seriesIndex];
+                if (seriesName === 'Avg. Time Between Purchases') {
+                    return val + " days";
+                } else if (seriesName === 'Purchase Frequency') {
+                    return val + " times";
+                } else if (seriesName === 'Basket Size') {
+                    return val + " qty";
+                } else if (seriesName === 'Recency') {
+                    return val + " days";
+                } else if (seriesName === 'Total Spending') {
+                    return "₹ " + val + " thousands";
+                } else {
+                    return val;
+                }
+            }
+        }
+    }
+};
+
+var chart = new ApexCharts(document.querySelector("#bar-chart"), options);
+chart.render();
+</script>
+
+
+<!--&lt;!&ndash;sales-trend&ndash;&gt;-->
+<!--<script>-->
+<!--        var options = {-->
+<!--          chart: {-->
+<!--            type: 'line',-->
+<!--            height: 500-->
+<!--          },-->
+<!--          series: [-->
+<!--            {-->
+<!--              name: 'Quantity',-->
+<!--              data: {{ quantity_data | safe }}-->
+<!--            },-->
+<!--            {-->
+<!--              name: 'Amount',-->
+<!--              data: {{ amount_data | safe }}-->
+<!--            }-->
+<!--          ],-->
+<!--          xaxis: {-->
+<!--            categories: {{ categories_json | safe }},-->
+<!--            title: {-->
+<!--              text: 'Date'-->
+<!--            }-->
+<!--          },-->
+<!--          yaxis: {-->
+<!--            title: {-->
+<!--              text: 'Sales'-->
+<!--            }-->
+<!--          },-->
+<!--          title: {-->
+<!--            text: 'Sales Trends Over Time'-->
+<!--          },-->
+<!--          legend: {-->
+<!--            position: 'top'-->
+<!--          },-->
+<!--          dataLabels: {-->
+<!--            enabled: true-->
+<!--          }-->
+<!--        };-->
+
+<!--        var chart = new ApexCharts(document.querySelector("#sales-trend"), options);-->
+<!--        chart.render();-->
+<!--    </script>-->
+
+
+<!--monthly sales-->
+<script>
+        // Historical monthly growth data
+        var monthlyGrowthData = {{monthly_sales_data | tojson | safe}};
+
+        // Predicted growth for the next month
+        var growthPredictions = {{growth_predictions | tojson | safe}};
+
+        // Prepare data for ApexCharts
+        var seriesData = [];
+        var categories = [];
+        Object.keys(monthlyGrowthData).forEach(function(product) {
+            var productData = monthlyGrowthData[product];
+            var growthValues = Object.values(productData);
+            seriesData.push({
+                name: product + ' Historical',
+                data: growthValues
+            });
+            categories = Object.keys(productData);
+        });
+
+        // Add predicted growth to series data
+        Object.keys(growthPredictions).forEach(function(product) {
+            var prediction = growthPredictions[product];
+            var lastMonth = categories[categories.length - 1];
+            seriesData.push({
+                name: product + ' Prediction',
+                data: [null, prediction] // Add nulls for historical months and prediction for the next month
+            });
+        });
+
+        // Define ApexCharts options
+        var options = {
+            series: seriesData,
+            chart: {
+                type: 'area',
+                stacked: false,
+                height: 350,
+                zoom: {
+                    enabled: false
+                },
+            },
+            dataLabels: {
+                enabled: false
+            },
+            markers: {
+                size: 0,
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    inverseColors: false,
+                    opacityFrom: 0.45,
+                    opacityTo: 0.05,
+                    stops: [20, 100, 100, 100]
+                },
+            },
+            yaxis: {
+                labels: {
+                    style: {
+                        colors: '#8e8da4',
+                    },
+                    offsetX: 0,
+                    formatter: function(val) {
+                        return val.toFixed(2) + "%";
+                    },
+                },
+                axisBorder: {
+                    show: false,
+                },
+                axisTicks: {
+                    show: false
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                categories: categories,
+                labels: {
+                    rotate: -15,
+                    rotateAlways: true,
+                }
+            },
+            title: {
+                text: 'Monthly Growth and Predicted Growth for Next Month',
+                align: 'left',
+                offsetX: 14
+            },
+            tooltip: {
+                shared: true,
+                x: {
+                    format: 'MMM yyyy'
+                }
+            },
+            legend: {
+                position: 'top',
+                horizontalAlign: 'right',
+                offsetX: -10
+            }
         };
 
-        var chart = new ApexCharts(document.querySelector("#customer-loyalty"), options);
+        // Generate ApexCharts instance
+        var chart = new ApexCharts(document.querySelector("#monthly-sales"), options);
+
+        // Render the chart
         chart.render();
-</script>
+    </script>
+
+
+<!--Plot line chart for average time between purchases-->
+<!--<script>-->
+<!--&lt;!&ndash;    const dict = {{data | safe}}&ndash;&gt;-->
+<!--    var options = {-->
+<!--      chart: {-->
+<!--        type: 'line',-->
+<!--        height: 350,-->
+<!--      },-->
+<!--      series: [{-->
+<!--        name: 'Avg. Time Between Purchases',-->
+<!--        data: dict.average_time-->
+<!--      }],-->
+<!--      xaxis: {-->
+<!--        categories: dict.customers,-->
+<!--        title: 'Days',-->
+<!--      },-->
+<!--      title: {-->
+<!--        text: 'Average Time Between Purchases for Each Customer'-->
+<!--      },-->
+<!--      colors: ['#BB8FCE']-->
+<!--    };-->
+
+<!--    var chart = new ApexCharts(document.querySelector("#line-chart"), options);-->
+<!--    chart.render();-->
+<!--</script>-->
+
+
+<!--Plot scatter plot for recency vs. purchase frequency-->
+<!--<script>-->
+<!--&lt;!&ndash;    const dict = {{data | safe}}&ndash;&gt;-->
+<!--    var options = {-->
+<!--  chart: {-->
+<!--    type: 'scatter',-->
+<!--    height: 350-->
+<!--  },-->
+<!--  series: [{-->
+<!--    name: 'Recency vs. Purchase Frequency',-->
+<!--    data: dict.recency.map((value, index) => {-->
+<!--      return {-->
+<!--        x: value,-->
+<!--        y: dict.purchase_frequency[index]-->
+<!--      };-->
+<!--    })-->
+<!--  }],-->
+<!--  xaxis: {-->
+<!--    title: {-->
+<!--      text: 'Recency (Days Since Last Purchase)'-->
+<!--    },-->
+<!--    labels: {-->
+<!--      rotate: -90-->
+<!--    }-->
+<!--  },-->
+<!--  yaxis: {-->
+<!--    title: {-->
+<!--      text: 'Purchase Frequency'-->
+<!--    }-->
+<!--  },-->
+<!--  title: {-->
+<!--    text: 'Recency vs. Purchase Frequency'-->
+<!--  }-->
+<!--};-->
+
+<!--var chart = new ApexCharts(document.querySelector("#scatter-chart"), options);-->
+<!--chart.render();-->
+
+<!--</script>-->
+
+
+<!--heatmap-chart-->
+<!--<script>-->
+<!--&lt;!&ndash;    const dict = {{data | safe}}&ndash;&gt;-->
+<!--    var options = {-->
+<!--  series: [{-->
+<!--      name: 'Average Time',-->
+<!--      data: dict.average_time-->
+<!--    },-->
+<!--    {-->
+<!--      name: 'Purchase Frequency',-->
+<!--      data: dict.purchase_frequency-->
+<!--    },-->
+<!--    {-->
+<!--      name: 'Recency',-->
+<!--      data: dict.recency-->
+<!--    },-->
+<!--    {-->
+<!--      name: 'Total Spending',-->
+<!--      data: dict.total_spending-->
+<!--    },-->
+<!--    {-->
+<!--      name: 'Basket Size',-->
+<!--      data: dict.basket_size-->
+<!--    }-->
+<!--  ],-->
+<!--  xaxis: {-->
+<!--    categories: dict.customers-->
+<!--  },-->
+<!--  yaxis: {-->
+<!--     title: {-->
+<!--        text: 'Value'-->
+<!--     }-->
+<!--  },-->
+<!--  chart: {-->
+<!--    height: 350,-->
+<!--    type: 'heatmap',-->
+<!--  },-->
+<!--  plotOptions: {-->
+<!--    heatmap: {-->
+<!--      shadeIntensity: 0.5,-->
+<!--      radius: 0,-->
+<!--      useFillColorAsStroke: true,-->
+<!--      colorScale: {-->
+<!--        ranges: [{-->
+<!--            from: Math.min(...dict.average_time), // Minimum value of Average Time-->
+<!--            to: Math.max(...dict.average_time), // Maximum value of Average Time-->
+<!--            name: 'Average Time',-->
+<!--            color: '#FFB200'-->
+<!--          },-->
+<!--          {-->
+<!--            from: Math.min(...dict.purchase_frequency), // Minimum value of Purchase Frequency-->
+<!--            to: Math.max(...dict.purchase_frequency), // Maximum value of Purchase Frequency-->
+<!--            name: 'Purchase Frequency',-->
+<!--            color: '#128FD9'-->
+<!--          },-->
+<!--          {-->
+<!--            from: Math.min(...dict.recency), // Minimum value of Recency-->
+<!--            to: Math.max(...dict.recency), // Maximum value of Recency-->
+<!--            name: 'Recency',-->
+<!--            color: '#FFB200'-->
+<!--          },-->
+<!--          {-->
+<!--            from: Math.min(...dict.total_spending), // Minimum value of Total Spending-->
+<!--            to: Math.max(...dict.total_spending), // Maximum value of Total Spending-->
+<!--            name: 'Total Spending',-->
+<!--            color: '#FF0000'-->
+<!--          },-->
+<!--          {-->
+<!--            from: Math.min(...dict.basket_size), // Minimum value of Basket Size-->
+<!--            to: Math.max(...dict.basket_size), // Maximum value of Basket Size-->
+<!--            name: 'Basket Size',-->
+<!--            color: '#FFC0CB'-->
+<!--          }-->
+<!--        ]-->
+<!--      }-->
+<!--    }-->
+<!--  },-->
+<!--  dataLabels: {-->
+<!--    enabled: false-->
+<!--  },-->
+<!--  stroke: {-->
+<!--    width: 1-->
+<!--  },-->
+<!--  title: {-->
+<!--    text: 'Correlation Heatmap of Customer Loyalty Metrics'-->
+<!--  },-->
+<!--  tooltip: {-->
+<!--        y: {-->
+<!--            formatter: function(val, { series, seriesIndex, dataPointIndex, w }) {-->
+<!--                var seriesName = w.globals.seriesNames[seriesIndex];-->
+<!--                if (seriesName === 'Average Time') {-->
+<!--                    return val + " days";-->
+<!--                } else if (seriesName === 'Purchase Frequency') {-->
+<!--                    return val + " times";-->
+<!--                } else if (seriesName === 'Basket Size') {-->
+<!--                    return val + " qty";-->
+<!--                } else if (seriesName === 'Recency') {-->
+<!--                    return val + " days";-->
+<!--                } else if (seriesName === 'Total Spending') {-->
+<!--                    return "₹ " + val + " thousands";-->
+<!--                } else {-->
+<!--                    return val;-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+<!--    }-->
+<!--};-->
+
+<!--var chart = new ApexCharts(document.querySelector("#heatmap-chart"), options);-->
+<!--chart.render();-->
+
+<!--</script>-->
+
+
+<!--Plot histogram for recency-->
+<!--<script>-->
+<!--&lt;!&ndash;    const dict = {{data | safe}}&ndash;&gt;-->
+<!--    var options = {-->
+<!--      chart: {-->
+<!--        type: 'histogram',-->
+<!--        height: 350-->
+<!--      },-->
+<!--      series: [{-->
+<!--        name: 'Recency',-->
+<!--        data: dict.recency-->
+<!--      }],-->
+<!--      title: {-->
+<!--        text: 'Histogram of Recency'-->
+<!--      }-->
+<!--    }-->
+
+<!--    var chart = new ApexCharts(document.querySelector("#histogram-chart"), options);-->
+<!--    chart.render();-->
+<!--</script>-->
+
+
+<!--pie-chart-->
+<!--<script>-->
+<!--&lt;!&ndash;    const dict = {{data | safe}}&ndash;&gt;-->
+
+<!--    var options = {-->
+<!--  chart: {-->
+<!--    type: 'donut',-->
+<!--    height: 350-->
+<!--  },-->
+<!--  series: dict.recency.map((value, index) => {-->
+<!--    return {-->
+<!--      name: dict.customers[index],-->
+<!--      data: value-->
+<!--    };-->
+<!--  }),-->
+<!--  labels: dict.customers,-->
+<!--  title: {-->
+<!--    text: 'Recency Categories'-->
+<!--  },-->
+<!--  colors: ['#4099ff', '#0e9e4a', '#00bcd4', '#FFB64D', '#FF5370'], // Customize colors-->
+<!--  fill: {-->
+<!--    type: 'gradient',-->
+<!--    gradient: {-->
+<!--      shade: 'light',-->
+<!--      inverseColors: true,-->
+<!--    }-->
+<!--  },-->
+<!--  legend: {-->
+<!--    show: true,-->
+<!--    position: 'right',-->
+<!--  },-->
+<!--  plotOptions: {-->
+<!--    pie: {-->
+<!--      donut: {-->
+<!--        labels: {-->
+<!--          show: true,-->
+<!--          name: {-->
+<!--            show: true-->
+<!--          },-->
+<!--          value: {-->
+<!--            show: true-->
+<!--          }-->
+<!--        }-->
+<!--      }-->
+<!--    }-->
+<!--  },-->
+<!--  dataLabels: {-->
+<!--    enabled: true,-->
+<!--    dropShadow: {-->
+<!--      enabled: false,-->
+<!--    }-->
+<!--  },-->
+<!--  responsive: [{-->
+<!--    breakpoint: 480,-->
+<!--    options: {-->
+<!--      legend: {-->
+<!--        position: 'bottom'-->
+<!--      }-->
+<!--    }-->
+<!--  }]-->
+<!--};-->
+
+<!--var chart = new ApexCharts(document.querySelector("#donut-chart"), options);-->
+<!--chart.render();-->
+<!--</script>-->
+
+
+<!--price-sensitivity-->
+<!--<script>-->
+<!--&lt;!&ndash;    const dict = {{data | safe}}&ndash;&gt;-->
+<!--    var colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#546E7A', '#26a69a', '#D10CE8', '#FF66C4', '#7FFF00'];-->
+
+<!--var options = {-->
+<!--  chart: {-->
+<!--    height: 350,-->
+<!--    type: 'scatter',-->
+<!--    zoom: {-->
+<!--      enabled: true,-->
+<!--      type: 'xy'-->
+<!--    }-->
+<!--  },-->
+<!--  dataLabels: {-->
+<!--    enabled: false-->
+<!--  },-->
+<!--  series: [{-->
+<!--    name: 'Product',-->
+<!--    data: dict.product_name.map((product, index) => {-->
+<!--      return {-->
+<!--        x: dict.price_per_unit[index],-->
+<!--        y: dict.total_revenue[index],-->
+<!--        z: dict.total_qty[index],-->
+<!--        name: product,-->
+<!--        color: colors[index % colors.length] // Assign color from the 'colors' array-->
+<!--      };-->
+<!--    })-->
+<!--  }],-->
+<!--  xaxis: {-->
+<!--    title: {-->
+<!--      text: 'Price Per Unit (₹)'-->
+<!--    },-->
+<!--    tickAmount: 10,-->
+<!--    labels: {-->
+<!--      formatter: function(val) {-->
+<!--        return '₹' + val.toFixed(2);-->
+<!--      }-->
+<!--    }-->
+<!--  },-->
+<!--  yaxis: {-->
+<!--    title: {-->
+<!--      text: 'Total Revenue (₹)'-->
+<!--    },-->
+<!--    tickAmount: 10,-->
+<!--    labels: {-->
+<!--      formatter: function(val) {-->
+<!--        return '₹' + val;-->
+<!--      }-->
+<!--    }-->
+<!--  },-->
+<!--  markers: {-->
+<!--    size: 8-->
+<!--  },-->
+<!--  tooltip: {-->
+<!--    custom: function({ series, seriesIndex, dataPointIndex, w }) {-->
+<!--      return '<div class="apexcharts-tooltip">' +-->
+<!--        '<div>Product: ' + dict.product_name[dataPointIndex] + '</div>' +-->
+<!--        '<div>Price Per Unit: ₹' + dict.price_per_unit[dataPointIndex].toFixed(2) + '</div>' +-->
+<!--        '<div>Total Revenue: ₹' + dict.total_revenue[dataPointIndex] + '</div>' +-->
+<!--        '<div>Total Quantity Sold: ' + dict.total_qty[dataPointIndex] + '</div>' +-->
+<!--        '</div>';-->
+<!--    }-->
+<!--  },-->
+<!--  title: {-->
+<!--    text: 'Price Sensitivity Analysis'-->
+<!--  }-->
+<!--};-->
+
+<!--var chart = new ApexCharts(document.querySelector("#price-sensitivity"), options);-->
+<!--chart.render();-->
+
+
+<!--</script>-->
+
+
+<!--customer-behaviour-->
+<!--<script>-->
+<!--&lt;!&ndash;    const dict = {{data | safe}}&ndash;&gt;-->
+<!--    var options = {-->
+<!--    chart: {-->
+<!--      height: 350,-->
+<!--      type: 'scatter',-->
+<!--      zoom: {-->
+<!--        enabled: true,-->
+<!--        type: 'xy'-->
+<!--      }-->
+<!--    },-->
+<!--    dataLabels: {-->
+<!--      enabled: false-->
+<!--    },-->
+<!--    series: [-->
+<!--      {-->
+<!--        name: 'Total Quantity',-->
+<!--        data: Object.keys(dict.customer_purchase_summary).map(function(key) {-->
+<!--          return {-->
+<!--            x: dict.customer_purchase_summary[key]['Total_Revenue'],-->
+<!--            y: dict.customer_purchase_summary[key]['Total_Quantity'],-->
+<!--            name: key-->
+<!--          };-->
+<!--        })-->
+<!--      }-->
+<!--    ],-->
+<!--    xaxis: {-->
+<!--      title: {-->
+<!--        text: 'Total Revenue'-->
+<!--      }-->
+<!--    },-->
+<!--    yaxis: {-->
+<!--      title: {-->
+<!--        text: 'Total Quantity Sold'-->
+<!--      }-->
+<!--    },-->
+<!--    markers: {-->
+<!--      size: 8-->
+<!--    },-->
+<!--    tooltip: {-->
+<!--      custom: function({ series, seriesIndex, dataPointIndex, w }) {-->
+<!--        var data = series[seriesIndex][dataPointIndex];-->
+<!--        return '<div class="apexcharts-tooltip">' +-->
+<!--          '<div>Customer: ' + dict.name + '</div>' +-->
+<!--          '<div>Total Revenue: ₹' + dict.x + '</div>' +-->
+<!--          '<div>Total Quantity Sold: ' + dict.y + '</div>' +-->
+<!--          '</div>';-->
+<!--      }-->
+<!--    },-->
+<!--    title: {-->
+<!--      text: 'Customer Purchase Summary',-->
+<!--      align: 'center'-->
+<!--    }-->
+<!--  };-->
+
+<!--  var chart = new ApexCharts(document.querySelector("#customer-behaviour"), options);-->
+<!--  chart.render();-->
+<!--</script>-->
 
 {% endblock javascripts %}

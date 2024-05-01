@@ -284,7 +284,8 @@
                         <div class="card-header">
                             <h5>Sales Monitor</h5>
                             <div class="card-header-right">
-<!--                                <div class="btn-group card-option">-->
+                                <input type="text" id="searchBar" style="width:480px" class="form-control" placeholder="Search by name or date range (dd-mm-yyyy to dd-mm-yyyy)">
+                                <!--                                <div class="btn-group card-option">-->
 <!--                                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
 <!--                                        <i class="feather icon-more-horizontal"></i>-->
 <!--                                    </button>-->
@@ -312,43 +313,45 @@
 <!--                            </ul>-->
                         </div>
                         <div class="card-body p-0">
-                            <div class="tab-content" id="pills-tabContent">
-                                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                                    <div class="table-responsive">
-                                        <div class="customer-scroll" style="height:362px;position:relative;">
-                                            <table class="table table-hover m-b-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Product Name</th>
-                                                        <th>HSN Code</th>
-                                                        <th>Qty</th>
-                                                        <th>Rate</th>
-                                                        <th>Amount</th>
-                                                        <th>Bill No</th>
-                                                        <th>Bill Date</th>
-                                                        <th>Buyer Name</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {% for item in data_df %}
-                                                    <tr>
-                                                        <td>{{ item.Product_Name }}</td>
-                                                        <td>{{ item.HSN_Code }}</td>
-                                                        <td>{{ item.Qty }}</td>
-                                                        <td>{{ item.Rate }}</td>
-                                                        <td>{{ item.Amount }}</td>
-                                                        <td>{{ item.Bill_No }}</td>
-                                                        <td>{{ item.Bill_Date }}</td>
-                                                        <td>{{ item.Buyer_Name }}</td>
-                                                    </tr>
-                                                    {% endfor %}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="table-responsive">
+                <!-- Search bar -->
+
+                <div class="customer-scroll" style="height:362px;position:relative;">
+                    <table class="table table-hover m-b-0" id="myTable">
+                        <thead class="table-fixed-header">
+                            <tr>
+                                <th>Product Name</th>
+                                <th>HSN Code</th>
+                                <th>Qty</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Bill No</th>
+                                <th>Bill Date</th>
+                                <th>Buyer Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in data_df %}
+                            <tr>
+                                <td>{{ item.Product_Name }}</td>
+                                <td>{{ item.HSN_Code }}</td>
+                                <td>{{ item.Qty }}</td>
+                                <td>{{ item.Rate }}</td>
+                                <td>{{ item.Amount }}</td>
+                                <td>{{ item.Bill_No }}</td>
+                                <td>{{ item.Bill_Date }}</td>
+                                <td>{{ item.Buyer_Name }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
                     </div>
                 </div>
                 <!-- Customer overview end -->
@@ -364,6 +367,66 @@
 {% block javascripts %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!--table search-->
+<script>
+    // Function to filter table rows based on input and date range
+    function filterTable() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("searchBar");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        var tbody = table.getElementsByTagName("tbody")[0]; // Get the tbody element
+        tr = tbody.getElementsByTagName("tr"); // Get all rows within tbody
+        var startDate, endDate;
+
+        // Check if filter contains a date range
+        if (filter.includes(" TO ")) {
+            var dateRange = filter.split(" TO ");
+            startDate = parseDate(dateRange[0].trim());
+            endDate = parseDate(dateRange[1].trim());
+        }
+
+        for (i = 0; i < tr.length; i++) {
+            var showRow = false;
+            td = tr[i].getElementsByTagName("td");
+            for (var j = 0; j < td.length; j++) {
+                var cell = td[j];
+                if (cell) {
+                    txtValue = cell.textContent || cell.innerText;
+                    // Check if cell content matches the search filter or falls within the date range
+                    if ((txtValue.toUpperCase().indexOf(filter) > -1) ||
+                        (startDate && endDate && isDateWithinRange(cell.textContent.trim(), startDate, endDate))) {
+                        showRow = true;
+                        break;
+                    }
+                }
+            }
+            // Toggle row display based on filtering results
+            tr[i].style.display = showRow ? "" : "none";
+        }
+    }
+
+    // Add event listener to the search bar
+    document.getElementById("searchBar").addEventListener("keyup", filterTable);
+
+    // Function to parse dd-mm-yyyy date format
+    function parseDate(dateString) {
+        var parts = dateString.split("-");
+        // Ensure proper parsing of date parts and return a Date object
+        return new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10));
+    }
+
+    // Function to check if a date falls within a specified range
+    function isDateWithinRange(dateString, startDate, endDate) {
+        var date = parseDate(dateString);
+        // Adjust endDate to include the entire day by setting it to the end of the day
+        endDate.setHours(23, 59, 59, 999);
+        return (date >= startDate && date <= endDate);
+    }
+</script>
+
 
     <!-- Add Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybB5IXNxFwWQfE7u8Lj+XJHAxKlXiG/8rsrtpb6PEdzD828Ii" crossorigin="anonymous"></script>
@@ -386,6 +449,8 @@
 <!--    <script src="https://cdn.jsdelivr.net/npm/apexcharts/dist/apexcharts.min.js"></script>-->
     <script src="/static/assets/js/pages/dashboard-main.js"></script>
 
+
+<!--apex chart-->
 <script>
     const dict = {{apex_data | safe}}
         var options = {
@@ -431,8 +496,8 @@
             yaxis:
                 {
                 show: true,
-                min: 0,
-                max: 40000000,
+<!--                min: 0,-->
+<!--                max: 40000000,-->
                 labels: {
                     style: {
                         color: '#ccc'
