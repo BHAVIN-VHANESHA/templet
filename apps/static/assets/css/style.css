@@ -1,11 +1,3 @@
-/**======================================================================
-=========================================================================
-Template Name: Gradient able Bootstrap Admin Template
-Author: Phoenixcoded
-Support: support@phoenixcoded.net
-File: style.css
-=========================================================================
-=================================================================================== */
 /* devanagari */
 @import url(plugins/animate.min.css);
 
@@ -103,6 +95,15 @@ File: style.css
 /*
  * Scrollbar rail styles
  */
+
+ .table-fixed-header {
+    position: sticky;
+    top: 0;
+    background-color: #fff; /* Change this to the desired background color */
+    z-index: 1000; /* Adjust z-index as needed */
+}
+
+
 .ps__rail-x {
     display: none;
     opacity: 0;
