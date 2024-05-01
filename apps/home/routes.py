@@ -1,16 +1,17 @@
 import json
-
-from apps.home import blueprint
-from flask_login import login_required
-from jinja2 import TemplateNotFound
-from werkzeug.utils import secure_filename
 import os
-from flask import Flask, render_template, request, session, url_for, redirect
 import re
+from collections import defaultdict
+from datetime import datetime
 import PyPDF2
 import pandas as pd
-from pandasql import sqldf
-from datetime import datetime
+from flask import render_template, request, url_for, redirect
+from flask_login import login_required
+from jinja2 import TemplateNotFound
+from sklearn.ensemble import RandomForestRegressor
+import numpy as np
+from statsmodels.tsa.seasonal import seasonal_decompose
+from apps.home import blueprint
 
 
 ALLOWED_EXTENSIONS = {'pdf'}
@@ -129,7 +130,6 @@ def process_invoice(cleaned_text):
 
 
 def card_values_calculation(df):
-
     df['Bill_Date'] = pd.to_datetime(df['Bill_Date'], format='%d-%m-%Y')
 
     order_query = df["Bill_No"].nunique()
@@ -151,17 +151,21 @@ def card_values_calculation(df):
     # print(revenue_result)
 
     total_customers = df['Buyer_Name'].nunique()
-    new_customers_current_month = current_month_data['Buyer_Name'].nunique()
+
+    # Find customers who are entirely new in the current month
+    previous_month_data = df[(df['Bill_Date'].dt.month < current_month) & (df['Bill_Date'].dt.year == current_year)]
+    previous_month_customers = previous_month_data['Buyer_Name'].unique()
+    current_month_customers = current_month_data['Buyer_Name'].unique()
+    new_customers_current_month = set(current_month_customers) - set(previous_month_customers)
 
     data = {"order_result": order_result, "total_sales_result": total_sales_result,
             "current_month_result": current_month_result, "revenue_result": revenue_result,
             "current_month_revenue": current_month_revenue, "total_customers": total_customers,
-            "new_customers_current_month": new_customers_current_month}
+            "new_customers_current_month": len(new_customers_current_month)}
     return data
 
 
 def apex_chart(df):
-
     df['Bill_Date'] = pd.to_datetime(df['Bill_Date'], format='%d-%m-%Y')
 
     # Group by month and year, and count unique orders
@@ -195,7 +199,8 @@ def index():
             data = card_values_calculation(df)
             apex_data = apex_chart(df)
             top_5_data = top_5(df)
-            return render_template('home/index.html', data_df=data_df, data=data, apex_data=apex_data, top_5_data=top_5_data)
+            return render_template('home/index.html', data_df=data_df, data=data, apex_data=apex_data,
+                                   top_5_data=top_5_data)
     except pd.errors.EmptyDataError:
         return render_template("home/sample-page.html")
     except FileNotFoundError:
@@ -279,27 +284,153 @@ def various_analysis(df):
     # Merge the total quantity and total revenue DataFrames
     analysis_df = pd.merge(total_qty_sold, total_revenue, on='Product_Name')
 
+    # Calculate price per unit for each product
+    analysis_df['Price_Per_Unit'] = analysis_df['Amount'] / analysis_df['Qty']
+
+    # customer behaviour
+    customer_purchase_summary = df.groupby('Buyer_Name').agg({
+        'Qty': 'sum',
+        'Rate': ['sum', 'mean'],
+        'Product_Name': 'count'
+    })
+
+    customer_purchase_summary.columns = ['Total_Quantity', 'Total_Revenue', 'Average_Rate', 'Total_Products_Purchased']
+    # Convert customer_purchase_summary DataFrame to dictionary
+    customer_purchase_summary_dict = customer_purchase_summary.to_dict()
+
     # Combine loyalty metrics into a DataFrame
     loyalty_metrics = pd.DataFrame({
-        'Average_Time_Between_Purchases': avg_time_between_purchases,
-        'Purchase_Frequency': purchase_frequency,
-        'Recency': recency,
-        'Total_Spending': total_spending,
-        'Basket_Size': basket_size
+        # 'Average_Time_Between_Purchases': avg_time_between_purchases,
+        # 'Purchase_Frequency': purchase_frequency,
+        # 'Recency': recency,
+        # 'Total_Spending': total_spending,
+        # 'Basket_Size': basket_size,
+        "customers": avg_time_between_purchases.index,
+        "avg_time": avg_time_between_purchases.values,
+        "frequency": purchase_frequency.values,
+        "recency": recency.dt.days.values,
+        "spending": total_spending.values,
+        "basket": basket_size.values
     })
 
     data = {
+        "customers": loyalty_metrics['customers'].tolist(),
         "product_name": analysis_df['Product_Name'].tolist(),
         "total_qty": analysis_df['Qty'].tolist(),
         "total_revenue": analysis_df['Amount'].tolist(),
-        # "average_time": loyalty_metrics['Average_Time_Between_Purchases'].tolist(),
-        "purchase_frequency": loyalty_metrics['Purchase_Frequency'].tolist(),
-        # "recency": loyalty_metrics['Recency'].tolist(),
-        "total_spending": loyalty_metrics['Total_Spending'].tolist(),
-        "basket_size": loyalty_metrics['Basket_Size'].tolist(),
-        "date": df['Bill_Date'].dt.strftime('%Y-%m').tolist()
+        "average_time": [str(td) for td in loyalty_metrics['avg_time']],
+        "purchase_frequency": loyalty_metrics['frequency'].tolist(),
+        "recency": loyalty_metrics['recency'].tolist(),
+        "total_spending": loyalty_metrics['spending'].tolist(),
+        "basket_size": loyalty_metrics['basket'].tolist(),
+        "price_per_unit": analysis_df['Price_Per_Unit'].tolist(),
+        "date": df['Bill_Date'].dt.strftime('%Y-%m').tolist(),
+        "customer_purchase_summary": customer_purchase_summary_dict,
+        "rate": df['Rate'].tolist(),
+        "qty": df['Qty'].tolist()
     }
     return data
+
+
+def sales_trend(df):
+    # Convert 'Bill_Date' column to datetime format
+    df['Bill_Date'] = pd.to_datetime(df['Bill_Date'], format='%d-%m-%Y')
+
+    # Group data by 'Product_Name' and 'Buyer_Name' and aggregate quantities and amounts
+    grouped_data = df.groupby(['Product_Name', 'Buyer_Name']).agg({
+        'Qty': 'sum',
+        'Amount': 'sum',
+        'Bill_Date': lambda x: pd.Series(x).min(),  # Get the earliest date for each group
+    }).reset_index()
+
+    # Create a DataFrame to store all aggregated data
+    all_data = pd.DataFrame(columns=['Product_Name', 'Buyer_Name', 'Bill_Date', 'Qty', 'Amount'])
+
+    # Append all data to the all_data DataFrame
+    for index, row in grouped_data.iterrows():
+        product = row['Product_Name']
+        buyer = row['Buyer_Name']
+        quantity = row['Qty']
+        amount = row['Amount']
+        first_purchase_date = row['Bill_Date']
+
+        product_data = df[(df['Product_Name'] == product) & (df['Buyer_Name'] == buyer)]
+        all_data = pd.concat([all_data, product_data])
+
+    # Time Series Analysis for Quantity
+    quantity_ts = all_data.groupby('Bill_Date')['Qty'].sum()
+    quantity_decomposition = seasonal_decompose(quantity_ts, model='additive',
+                                                period=12)  # Assuming a yearly seasonality
+    quantity_trend = quantity_decomposition.trend
+    quantity_seasonal = quantity_decomposition.seasonal
+
+    # Time Series Analysis for Amount
+    amount_ts = all_data.groupby('Bill_Date')['Amount'].sum()
+    amount_decomposition = seasonal_decompose(amount_ts, model='additive', period=12)  # Assuming a yearly seasonality
+    amount_trend = amount_decomposition.trend
+    amount_seasonal = amount_decomposition.seasonal
+
+    # Prepare data for JavaScript
+    quantity_ts_json = quantity_ts.reset_index().to_json(orient='records')
+    amount_ts_json = amount_ts.reset_index().to_json(orient='records')
+    categories_json = json.dumps(list(quantity_ts.index.astype(str)))
+
+    # data = {"quantity_ts_json": quantity_ts_json, "amount_ts_json":amount_ts_json, "categories_json": categories_json}
+    return quantity_ts_json, amount_ts_json, categories_json
+
+
+def calculate_monthly_growth_with_prediction(df):
+    # Convert 'Bill_Date' to datetime
+    df['Bill_Date'] = pd.to_datetime(df['Bill_Date'], format='%d-%m-%Y')
+    df['Month_Year'] = df['Bill_Date'].dt.strftime('%Y-%m')
+
+    # Sort DataFrame by 'Bill_Date' to ensure accurate calculations
+    df.sort_values(by='Bill_Date', inplace=True)
+
+    # Initialize dictionary to store monthly growth for each product
+    monthly_growth = defaultdict(dict)
+    growth_predictions = {}
+
+    for _, row in df.iterrows():
+        product_name = row['Product_Name']
+        qty = row['Qty']
+        bill_date = row['Bill_Date']
+
+        # Extract year and month from the bill date
+        year_month = bill_date.strftime('%Y-%m')
+
+        # Initialize product data if not already present
+        if product_name not in monthly_growth:
+            monthly_growth[product_name] = defaultdict(int)
+
+        # Add quantity to the corresponding month for the product
+        monthly_growth[product_name][year_month] += qty
+
+    # Calculate monthly growth for each product and predict growth for the next month
+    for product, monthly_data in monthly_growth.items():
+        months = sorted(monthly_data.keys())
+        X_train = np.array([[int(month.split('-')[1])] for month in months])
+        y_train = np.array([monthly_data[month] for month in months])
+
+        # Initialize and train Random Forest regressor
+        rf_regressor = RandomForestRegressor(n_estimators=100, random_state=42)
+        rf_regressor.fit(X_train, y_train)
+
+        # Predict growth for the next month
+        next_month = int(months[-1].split('-')[1]) + 1
+        next_month_growth = rf_regressor.predict([[next_month]])[0]
+        growth_predictions[product] = next_month_growth
+
+        # Calculate growth for each month
+        for i in range(1, len(months)):
+            current_month = months[i]
+            previous_month = months[i - 1]
+            current_qty = monthly_data[current_month]
+            previous_qty = monthly_data[previous_month]
+            growth = (current_qty - previous_qty) / previous_qty * 100 if previous_qty != 0 else 0
+            monthly_growth[product][current_month] = growth
+
+    return monthly_growth, growth_predictions
 
 
 @blueprint.route('/chart-apex')
@@ -310,7 +441,10 @@ def smart_analysis():
             return render_template("home/sample-page.html")
         else:
             data = various_analysis(df)
-            return render_template('home/chart-apex.html', data=data)
+            monthly_sales_data, growth_predictions = calculate_monthly_growth_with_prediction(df)
+            # quantity_data, amount_data, categories_json = sales_trend(df)
+            return render_template('home/chart-apex.html', data=data, monthly_sales_data=monthly_sales_data,
+                                   growth_predictions=growth_predictions)
     except pd.errors.EmptyDataError:
         return render_template("home/sample-page.html")
     except FileNotFoundError:
