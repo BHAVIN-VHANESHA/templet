@@ -489,26 +489,39 @@ chart.render();
         // Predicted growth for the next month
         var growthPredictions = {{growth_predictions | tojson | safe}};
 
+        // Get the current date
+        var currentDate = new Date();
+
+        // Get the next month from the current date
+        var nextMonth = currentDate.getMonth() + 1; // Adding 2 because getMonth() returns zero-based index
+        var nextYear = currentDate.getFullYear();
+        if (nextMonth > 11) {
+            nextMonth = nextMonth % 12;
+            nextYear += 1;
+        }
+
         // Prepare data for ApexCharts
         var seriesData = [];
         var categories = [];
-        Object.keys(monthlyGrowthData).forEach(function(product) {
+        var colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#008000', '#000080', '#008080', '#8D6E63', '#CCCCFF', '#E67E22'];
+        Object.keys(monthlyGrowthData).forEach(function(product, index) {
             var productData = monthlyGrowthData[product];
             var growthValues = Object.values(productData);
             seriesData.push({
                 name: product + ' Historical',
-                data: growthValues
+                data: growthValues,
+                color: colors[index % colors.length]
             });
             categories = Object.keys(productData);
         });
 
         // Add predicted growth to series data
-        Object.keys(growthPredictions).forEach(function(product) {
+        Object.keys(growthPredictions).forEach(function(product, index) {
             var prediction = growthPredictions[product];
-            var lastMonth = categories[categories.length - 1];
             seriesData.push({
                 name: product + ' Prediction',
-                data: [null, prediction] // Add nulls for historical months and prediction for the next month
+                data: Array(categories.length).fill(null).concat([prediction]),
+                color: colors[(index + Object.keys(monthlyGrowthData).length) % colors.length]
             });
         });
 
@@ -558,7 +571,7 @@ chart.render();
             },
             xaxis: {
                 type: 'datetime',
-                categories: categories,
+                categories: categories.concat([nextYear + '-' + ('0' + nextMonth).slice(-2)]),
                 labels: {
                     rotate: -15,
                     rotateAlways: true,
